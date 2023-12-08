@@ -1,9 +1,9 @@
 <template>
   <main>
       <div class="flex justify-center mt-5">
-          <div @click="openModal" class="w-9/12 flex justify-between shadow-[1px_1px_5px_2px_rgba(200,200,200,1)] p-2">
+          <div @click="openModal" class="w-9/12 flex justify-between items-center shadow-[1px_1px_5px_2px_rgba(200,200,200,1)] p-2">
               <p class="text-xl">My food entries:</p>
-              <button class="text-white p-1 bg-purple-400 rounded">+ New food enrtry</button>
+              <button class="text-white p-2 bg-purple-400 rounded">+ New food enrtry</button>
           </div>
       </div>
       <FoodEntryModal
