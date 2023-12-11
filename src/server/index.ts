@@ -2,17 +2,20 @@ const express = require('express')
 const app = express()
 const port = 3000;
 const mongoose = require('mongoose');
+import type {Request, Response} from 'express'
+
+//controllers
+const userRoute = require('./routes/auth');
+
 mongoose.connect('mongodb://127.0.0.1:27017/calorieTrackingApp');
 
-const Cat = mongoose.model('User', { name: String, password: Number });
-
-const kitty = new Cat({ name: 'Zildjnaa', password: 123 });
-kitty.save().then(() => console.log('meow'));
-
-app.get('/', (req, res) => {
-    res.send('Hello World!')
+app.use((req: Request, res: Response, next: any): void => {
+    res.header('Access-Control-Allow-Origin', req.headers.origin)
+    next();
 })
 
-app.listen(port, () => {
+app.use(userRoute)
+
+app.listen(port, (): void => {
     console.log(`Example app listening on port ${port}`)
 })

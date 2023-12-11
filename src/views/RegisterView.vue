@@ -6,13 +6,22 @@
             <input class="w-full p-1 border outline-none mb-3" placeholder="Email" />
             <label>Password:</label>
             <input class="w-full border p-1 outline-none" placeholder="Password"/>
-            <button class="bg-red-500 text-white p-1 w-full mt-5 rounded">Submit</button>
+            <button @click="register()" class="bg-red-500 text-white p-1 w-full mt-5 rounded">Submit</button>
         </div>
     </div>
 </template>
 
 <script setup>
+import axios from "axios";
 
+const register = async () => {
+    try {
+        const {data} = await axios.get('http://localhost:3000/register');
+        console.log(data)
+    } catch (err) {
+        //
+    }
+}
 </script>
 
 <style scoped>
