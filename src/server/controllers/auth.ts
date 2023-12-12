@@ -10,7 +10,6 @@ module.exports = {
         if(existentUser) return res.status(409).send({status: 'error'})
         try {
             const hashedPass: string = await bcrypt.hash(password, 10);
-            console.log(hashedPass)
             const user: HydratedDocument<UserI> = new User({
                 email,
                 password: hashedPass
@@ -23,8 +22,16 @@ module.exports = {
     },
     login: async (req: Request, res: Response): Promise<Response> => {
         const {email, password}: UserI = req.body;
-        const isRegistered: HydratedDocument<UserI | null> = await User.findOne({email, password});
-        if(isRegistered) return res.status(201).send({status: 'success'})
-        else return res.status(404).send({status: 'error'});
+        const isRegistered: HydratedDocument<UserI | null> = await User.findOne({email});
+        if(!isRegistered) return res.status(404).send({status: 'error'})
+        else {
+            try {
+                const match = await bcrypt.compare(password, isRegistered.password);
+                if(match) return res.status(201).send({status: 'success'})
+                else return res.status(404).send({status: 'error'})
+            } catch(err) {
+                return res.status(404).send({status: 'error'})
+            }
+        }
     }
 }
