@@ -6,7 +6,7 @@ const User = require('../models/user');
 module.exports = {
     register: async (req: Request, res: Response): Promise<Response> => {
         const {email, password}: UserI = req.body;
-        const existentUser: HydratedDocument<UserI> = await User.findOne({email});
+        const existentUser: HydratedDocument<UserI | null> = await User.findOne({email});
         if(existentUser) return res.status(409).send({status: 'error'})
         try {
             const user: HydratedDocument<UserI> = new User({
@@ -19,7 +19,10 @@ module.exports = {
             return res.status(500).send({status: 'error'})
         }
     },
-    login: (req: Request, res: Response): void => {
-        res.send('login')
+    login: async (req: Request, res: Response): Promise<Response> => {
+        const {email, password}: UserI = req.body;
+        const isRegistered: HydratedDocument<UserI | null> = await User.findOne({email, password});
+        if(isRegistered) return res.status(201).send({status: 'success'})
+        else return res.status(404).send({status: 'error'});
     }
 }

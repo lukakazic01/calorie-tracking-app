@@ -16,17 +16,20 @@
 <script setup lang="ts">
 import axios from "axios";
 import {ref} from "vue";
+import {useRouter} from "vue-router";
 
 const email = ref<string>('');
 const password = ref<string>('');
+const router = useRouter();
 
-const register = async () => {
+const register = async (): Promise<void> => {
     if(!email.value || !password.value) return
     try {
         const {data} = await axios.post('http://localhost:3000/register', {
             email: email.value,
             password: password.value
         });
+        await router.push('/login');
     } catch (err) {
         //
     }
