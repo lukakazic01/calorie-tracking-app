@@ -1,6 +1,8 @@
 import express from "express";
 const router = express.Router();
 const authController = require('../controllers/auth');
-router.post('/register', authController.register)
+const userSchema = require('../models/validation/userSchema')
+const validatePayload = require('../middlewares/validateSchema')
+router.post('/register', validatePayload(userSchema), authController.register)
 router.post('/login', authController.login)
 module.exports = router;

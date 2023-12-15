@@ -1,15 +1,17 @@
 <template>
-    <nav class="text-center bg-red-500">
+    <nav class="text-center bg-red-500 flex justify-between items-center">
         <ul class="flex text-white items-center">
             <li class="p-3"><RouterLink to="/">Home</RouterLink></li>
             <li class="p-3"><RouterLink to="/register">Register</RouterLink></li>
             <li class="p-3"><RouterLink to="/login">Login</RouterLink></li>
         </ul>
+        <p v-if="userStore.username" class="text-white pr-3">{{userStore.username}}</p>
     </nav>
 </template>
 
 <script setup>
-
+import {useUserStore} from "@/stores/user";
+const userStore = useUserStore()
 </script>
 
 <style scoped>
