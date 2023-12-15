@@ -30,7 +30,7 @@ module.exports = {
             try {
                 const match = await bcrypt.compare(password, isRegistered.password);
                 if(match) {
-                    const token = jwt.sign({
+                    const token: string = jwt.sign({
                         data: {name: isRegistered.email}
                     }, KEY, {expiresIn: '120s'})
                     res.setHeader('Set-Cookie', token)
