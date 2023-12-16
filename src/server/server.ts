@@ -13,8 +13,8 @@ mongoose.connect('mongodb://127.0.0.1:27017/calorieTrackingApp');
 
 app.use((req: Request, res: Response, next: NextFunction): void => {
     res.header('Access-Control-Allow-Origin', req.headers.origin);
-    res.header("Access-Control-Allow-Headers", "Content-Type"),
-    res.header('Access-Control-Allow-Credentials', 'true');
+    res.header('Access-Control-Allow-Headers', 'Content-Type, Authorization');
+    res.setHeader('Access-Control-Allow-Credentials', 'true');
     next();
 })
 

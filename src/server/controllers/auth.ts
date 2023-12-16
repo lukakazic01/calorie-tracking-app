@@ -28,12 +28,12 @@ module.exports = {
         if(!isRegistered) return res.status(404).send({status: 'error'})
         else {
             try {
-                const match = await bcrypt.compare(password, isRegistered.password);
+                const match: boolean = await bcrypt.compare(password, isRegistered.password);
                 if(match) {
                     const token: string = jwt.sign({
                         data: {name: isRegistered.email}
                     }, KEY, {expiresIn: '120s'})
-                    res.setHeader('Set-Cookie', token)
+                    res.setHeader('Set-Cookie', `token=${token}`)
                     return res.status(201).send({status: 'success', username: isRegistered.email})
                 } else return res.status(404).send({status: 'error'})
             } catch(err) {
