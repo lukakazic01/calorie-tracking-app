@@ -4,7 +4,7 @@ import type {HydratedDocument} from "mongoose";
 const User = require('../models/user');
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken')
-const KEY = 'MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEA53VzmIVVZZWyNm266l82'
+
 module.exports = {
     register: async (req: Request, res: Response): Promise<Response> => {
         const {email, password}: UserI = req.body;
@@ -32,7 +32,7 @@ module.exports = {
                 if(match) {
                     const token: string = jwt.sign({
                         data: {name: isRegistered.email}
-                    }, KEY, {expiresIn: '120s'})
+                    }, process.env.PRIVATE_KEY, {expiresIn: '120s'})
                     res.setHeader('Set-Cookie', `token=${token}`)
                     return res.status(201).send({status: 'success', username: isRegistered.email})
                 } else return res.status(404).send({status: 'error'})
@@ -40,5 +40,8 @@ module.exports = {
                 return res.status(404).send({status: 'error'})
             }
         }
-    }
+    },
+    verifyToken: async (req: Request, res: Response): Promise<any> => {
+        res.send({status: 'success'})
+    },
 }

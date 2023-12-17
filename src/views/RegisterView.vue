@@ -36,7 +36,7 @@ const emailError = ref<string | null>(null);
 const passwordError = ref<string | null>(null)
 const existingUserError = ref<boolean>(false)
 const { isPending ,mutate, isError, reset } = useMutation({
-    mutationFn: (newUser: UserI) => axios.post<IResponse>('http://localhost:3000/register', newUser),
+    mutationFn: (newUser: UserI) => axios.post<IResponse>('/register', newUser),
     onError: (err) => {
         const {error}: ErrorRegisterI[] = err.response.data;
          if(error) {

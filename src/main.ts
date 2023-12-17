@@ -20,6 +20,8 @@ app.use(router)
 app.mount('#app')
 
 const userStore = useUserStore();
+
+axios.defaults.baseURL = import.meta.env.VITE_API_URL
 axios.interceptors.request.use(
     (config) => {
         const token = userStore.token;
@@ -32,3 +34,10 @@ axios.interceptors.request.use(
         return Promise.reject(error)
     }
 )
+
+router.beforeEach(async (to, from): Promise<boolean> => {
+    const {data} = await axios.post('/verifyToken', {token: userStore.token})
+    console.log(data)
+    if(to.name === 'register' || to.name === 'login') return true;
+    else return false;
+})

@@ -35,7 +35,7 @@ const userStore = useUserStore();
 const {cookies} = useCookies();
 
 const {isPending, isError, reset, mutate} = useMutation({
-    mutationFn: (user: UserI) => axios.post<IResponse>('http://localhost:3000/login', user, {withCredentials: true}),
+    mutationFn: (user: UserI) => axios.post<IResponse>('/login', user, {withCredentials: true}),
     onSuccess: (d): void => {
         const {data} = d
         const token: string = cookies.get('token');
