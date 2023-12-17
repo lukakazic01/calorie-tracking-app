@@ -38,13 +38,11 @@ const {isPending, isError, reset, mutate} = useMutation({
     mutationFn: (user: UserI) => axios.post<IResponse>('/login', user, {withCredentials: true}),
     onSuccess: (d): void => {
         const {data} = d
-        const token: string = cookies.get('token');
-        userStore.setToken(token)
         userStore.setUsername(data.username);
         router.push('/')
     },
     onError: (err) => {
-        console.log(err)
+        //
     }
 })
 const login = (): void => {

@@ -48,6 +48,7 @@
 import FoodEntryModal from "@/components/FoodEntryModal.vue";
 import {ref, watch} from "vue";
 import axios from "axios";
+
 const date = ref<string>('');
 const isModalOpened = ref<boolean>(false);
 const openModal = (): void => {
@@ -58,7 +59,7 @@ const closeModal = (val: boolean): void => {
     isModalOpened.value = val;
 }
 const z = () => {
-    axios.post('/login', {email: 'kazicluka4@gmail.com', password: 'papagaj1212'}, {withCredentials: true})
+    axios.get('/getFood',)
 }
 
 watch(date, (newDate) => console.log(newDate));

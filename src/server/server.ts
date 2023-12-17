@@ -17,7 +17,9 @@ app.use((req: Request, res: Response, next: NextFunction): void => {
 
 //controllers
 const userRoute = require('./routes/auth');
+const foodRoute = require('./routes/food')
 app.use(userRoute)
+app.use(foodRoute)
 
 app.listen(port, (): void => {
     console.log(`Example app listening on port ${port}`)

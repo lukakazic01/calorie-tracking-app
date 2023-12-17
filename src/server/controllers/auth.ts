@@ -32,7 +32,7 @@ module.exports = {
                 if(match) {
                     const token: string = jwt.sign({
                         data: {name: isRegistered.email}
-                    }, process.env.PRIVATE_KEY, {expiresIn: '120s'})
+                    }, process.env.PRIVATE_KEY, {expiresIn: '10s'})
                     res.setHeader('Set-Cookie', `token=${token}`)
                     return res.status(201).send({status: 'success', username: isRegistered.email})
                 } else return res.status(404).send({status: 'error'})
@@ -41,7 +41,12 @@ module.exports = {
             }
         }
     },
-    verifyToken: async (req: Request, res: Response): Promise<any> => {
-        res.send({status: 'success'})
+    verifyToken: async (req: Request, res: Response): Promise<Response> => {
+        try {
+            await jwt.verify(req.body.token, process.env.PRIVATE_KEY)
+            return res.status(200).send({status: 'success', token: req.body.token})
+        } catch(err) {
+            return res.status(401).send({status: 'error'})
+        }
     },
 }
