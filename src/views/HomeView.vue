@@ -45,12 +45,9 @@ const z = () => {
     axios.get('/getFood',)
 }
 
-const addFoodEntry = (entry): void => {
+const addFoodEntry = (entry: IFoodEntry): void => {
     foodEntries.value.push(entry)
 }
-
-watch(date, (newDate) => console.log(newDate));
-
 </script>
 
 <style>
