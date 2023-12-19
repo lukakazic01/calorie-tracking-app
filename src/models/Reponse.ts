@@ -1,4 +1,5 @@
 export interface IResponse {
     status: string,
-    username?: string
+    username?: string,
+    token?: string
 }

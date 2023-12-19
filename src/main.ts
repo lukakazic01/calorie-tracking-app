@@ -10,6 +10,8 @@ import VueCookies, {useCookies} from 'vue3-cookies'
 import axios from 'axios';
 import {useUserStore} from "@/stores/user";
 import { jwtDecode } from "jwt-decode";
+import type {IResponse} from "@/models/Reponse";
+import type {IJwtPayload} from "@/models/JwtPayload";
 const app = createApp(App)
 
 app.component('VueDatePicker', VueDatePicker);
@@ -39,6 +41,7 @@ axios.interceptors.response.use(
     async (err): Promise<void> => {
         if(err.response.data.message === 'Invalid token') {
             userStore.$reset()
+            cookies.remove('token')
             await router.push('/login')
         }
     }
@@ -48,12 +51,15 @@ router.beforeEach( async (to, from): Promise<any> => {
     if(to.name !== 'login' && to.name !== 'register') {
         try {
             const token: string = cookies.get('token')
-            const {data: authData} = await axios.post('/verifyToken', {token})
-            const {data} = jwtDecode(authData.token)
-            userStore.setUsername(data.name);
+            const {data: authData} = await axios.post<IResponse>('/verifyToken', {token})
+            if(authData.token) {
+                const {data} = jwtDecode<IJwtPayload>(authData.token)
+                userStore.setUsername(data.name);
+            }
             return true;
         } catch(err) {
             userStore.$reset()
+            cookies.remove('token')
             return router.push('/login')
         }
 

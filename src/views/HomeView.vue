@@ -23,13 +23,13 @@
                   <th>Actions</th>
               </thead>
               <tbody>
-                   <tr class="border text-center">
-                       <td>Pizza</td>
-                       <td>400</td>
-                       <td>asdasd</td>
-                       <td>24$</td>
+                   <tr class="border text-center" v-for="entry in foodEntries" :key="entry.id">
+                       <td>{{ entry.name }}</td>
+                       <td>{{ entry.calories }}</td>
+                       <td>{{ entry.date }}</td>
+                       <td>{{ entry.price }}$</td>
                        <td>
-                           <button class="rounded mr-3 p-2 bg-red-500 text-white">trash</button>
+                           <button class="rounded mr-3 p-2 bg-red-500 text-white">delete</button>
                            <button class="bg-yellow-400 rounded p-2">edit</button>
                        </td>
                    </tr>
@@ -39,6 +39,7 @@
       <FoodEntryModal
               :open-modal="isModalOpened"
               @close-modal="closeModal"
+              @add-food-entry="addFoodEntry"
       />
       <button @click="z">a</button>
   </main>
@@ -48,7 +49,7 @@
 import FoodEntryModal from "@/components/FoodEntryModal.vue";
 import {ref, watch} from "vue";
 import axios from "axios";
-
+const foodEntries = ref([{id: 1, name: 'Pizza', calories: 400, date: '19/12/2023', price: 24}])
 const date = ref<string>('');
 const isModalOpened = ref<boolean>(false);
 const openModal = (): void => {
@@ -60,6 +61,10 @@ const closeModal = (val: boolean): void => {
 }
 const z = () => {
     axios.get('/getFood',)
+}
+
+const addFoodEntry = (entry): void => {
+    foodEntries.value.push(entry)
 }
 
 watch(date, (newDate) => console.log(newDate));

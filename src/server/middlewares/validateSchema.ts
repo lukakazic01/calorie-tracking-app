@@ -2,7 +2,7 @@ import type {NextFunction} from "express";
 import type {AnySchema} from "yup";
 import type {Request, Response} from "express";
 import {ValidationError} from "yup";
-import type {RegisterValidationErrorI} from "@/server/interfaces/RegisterValidationError";
+import type {RegisterValidationErrorI} from '../interfaces/RegisterValidationError';
 
 const validateSchema = (schema: AnySchema) => {
     return async (req: Request, res: Response, next: NextFunction): Promise<Response | void>  => {

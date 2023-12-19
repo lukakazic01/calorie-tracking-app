@@ -32,7 +32,7 @@ module.exports = {
                 if(match) {
                     const token: string = jwt.sign({
                         data: {name: isRegistered.email}
-                    }, process.env.PRIVATE_KEY, {expiresIn: '10s'})
+                    }, process.env.PRIVATE_KEY, {expiresIn: '1h'})
                     res.setHeader('Set-Cookie', `token=${token}`)
                     return res.status(201).send({status: 'success', username: isRegistered.email})
                 } else return res.status(404).send({status: 'error'})
