@@ -31,7 +31,7 @@ import {ref, watch} from "vue";
 import axios from "axios";
 import type {IFoodEntry} from "@/models/FoodEntry";
 import FoodEntryTable from "@/components/FoodEntryTable.vue";
-const foodEntries = ref<IFoodEntry[]>([{name: 'Pizza', calories: 400, date: new Date(), price: 24}])
+const foodEntries = ref<IFoodEntry[]>([])
 const date = ref<string>('');
 const isModalOpened = ref<boolean>(false);
 const openModal = (): void => {

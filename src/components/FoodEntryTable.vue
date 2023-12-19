@@ -8,6 +8,7 @@
         <th>Actions</th>
         </thead>
         <tbody>
+        <template v-if="props.foodEntries.length">
         <tr class="border text-center" v-for="(entry, index) in props.foodEntries" :key="index">
             <td>{{ entry.name }}</td>
             <td>{{ entry.calories }}</td>
@@ -18,8 +19,10 @@
                 <button class="bg-yellow-400 rounded p-2">edit</button>
             </td>
         </tr>
+        </template>
         </tbody>
     </table>
+    <p v-if="!props.foodEntries.length" class="mt-3">There is no data for you. add some food entries :)</p>
 </template>
 
 <script setup lang="ts">
