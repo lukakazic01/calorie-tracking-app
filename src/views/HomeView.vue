@@ -49,7 +49,7 @@
 import FoodEntryModal from "@/components/FoodEntryModal.vue";
 import {ref, watch} from "vue";
 import axios from "axios";
-const foodEntries = ref([{id: 1, name: 'Pizza', calories: 400, date: '19/12/2023', price: 24}])
+const foodEntries = ref([{id: 1, name: 'Pizza', calories: 400, date: '19/12/2023 21:20', price: 24}])
 const date = ref<string>('');
 const isModalOpened = ref<boolean>(false);
 const openModal = (): void => {
