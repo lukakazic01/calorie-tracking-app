@@ -50,7 +50,6 @@ const closeModal = (): void => {
 
 const addFoodEntry = (): void => {
     emit('closeModal', false)
-    console.log(foodEntry.value.date)
     emit('addFoodEntry', foodEntry.value)
 }
 </script>
