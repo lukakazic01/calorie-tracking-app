@@ -23,7 +23,7 @@
                   <th>Actions</th>
               </thead>
               <tbody>
-                   <tr class="border text-center" v-for="entry in foodEntries" :key="entry.id">
+                   <tr class="border text-center" v-for="(entry, index) in foodEntries" :key="index">
                        <td>{{ entry.name }}</td>
                        <td>{{ entry.calories }}</td>
                        <td>{{ entry.date }}</td>
@@ -49,7 +49,8 @@
 import FoodEntryModal from "@/components/FoodEntryModal.vue";
 import {ref, watch} from "vue";
 import axios from "axios";
-const foodEntries = ref([{id: 1, name: 'Pizza', calories: 400, date: '19/12/2023 21:20', price: 24}])
+import type {IFoodEntry} from "@/models/FoodEntry";
+const foodEntries = ref<IFoodEntry[]>([{name: 'Pizza', calories: 400, date: new Date(), price: 24}])
 const date = ref<string>('');
 const isModalOpened = ref<boolean>(false);
 const openModal = (): void => {
