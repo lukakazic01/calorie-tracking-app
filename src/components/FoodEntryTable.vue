@@ -1,5 +1,11 @@
 <template>
-    <table class="w-9/12 border mt-[40px]">
+    <div class="flex justify-center mt-5" v-if="props.isLoading">
+        <p><Loader /></p>
+    </div>
+    <div class="flex justify-center mt-5" v-else-if="props.isError">
+        <p>There was an error while fetching ur data</p>
+    </div>
+    <table class="w-9/12 border mt-[40px]" v-else>
         <thead class="bg-red-500 text-white">
         <th class="p-2">Food name</th>
         <th>Calories</th>
@@ -27,9 +33,12 @@
 
 <script setup lang="ts">
 import type {IFoodEntry} from "@/models/FoodEntry";
+import Loader from "@/components/Loader.vue";
 
 const props = defineProps<{
     foodEntries: IFoodEntry[]
+    isError: boolean,
+    isLoading: boolean
 }>()
 </script>
 

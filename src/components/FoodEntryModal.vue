@@ -34,6 +34,11 @@
 <script setup lang="ts">
 import {ref} from "vue";
 import type {IFoodEntry} from "@/models/FoodEntry";
+import {useMutation} from "@tanstack/vue-query";
+import axios from "axios";
+import {useUserStore} from "@/stores/user";
+import type {IResponse} from "@/models/Reponse";
+import type {IFood} from "@/server/interfaces/Food";
 
 const props = defineProps<{
     openModal: boolean
@@ -42,7 +47,15 @@ const emit = defineEmits<{
     closeModal: [val: boolean]
     addFoodEntry: [val: IFoodEntry]
 }>()
-const foodEntry = ref<IFoodEntry>({name: '', date: new Date(), price: null, calories: null})
+const foodEntry = ref<IFoodEntry>({name: '', date: new Date(), price: null, calories: null});
+const userStore = useUserStore()
+const {mutate} = useMutation({
+    mutationFn: (foodEntry: IFoodEntry & {email: string}) => axios.post<IFood & {status: string}>('/addFoodEntry', foodEntry),
+    onSuccess: (res) => {
+        const {data} = res
+        emit('addFoodEntry', data);
+    }
+})
 
 const closeModal = (): void => {
     emit('closeModal', false)
@@ -50,7 +63,7 @@ const closeModal = (): void => {
 
 const addFoodEntry = (): void => {
     emit('closeModal', false)
-    emit('addFoodEntry', foodEntry.value)
+    mutate({...foodEntry.value, email: userStore.username})
 }
 </script>
 

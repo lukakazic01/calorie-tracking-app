@@ -14,35 +14,46 @@
                   </div>
               </div>
           </div>
-          <FoodEntryTable :food-entries="foodEntries"/>
+          <FoodEntryTable :food-entries="foodEntries" :is-loading="isLoading" :is-error="isError"/>
       </div>
       <FoodEntryModal
               :open-modal="isModalOpened"
               @close-modal="closeModal"
               @add-food-entry="addFoodEntry"
       />
-      <button @click="z">a</button>
   </main>
 </template>
 
 <script setup lang="ts">
 import FoodEntryModal from "@/components/FoodEntryModal.vue";
-import {ref, watch} from "vue";
+import {ref} from "vue";
 import axios from "axios";
 import type {IFoodEntry} from "@/models/FoodEntry";
 import FoodEntryTable from "@/components/FoodEntryTable.vue";
+import {useQuery} from "@tanstack/vue-query";
+import {useUserStore} from "@/stores/user";
+import type {AllFoodEntriesI} from "@/models/allFoodEntries";
 const foodEntries = ref<IFoodEntry[]>([])
 const date = ref<string>('');
 const isModalOpened = ref<boolean>(false);
+const userStore = useUserStore()
+const getAlLFoodEntries = () => axios.get<AllFoodEntriesI[]>('/getFoodEntries', {params: {email: userStore.username}});
+
+const {isLoading ,isError} = useQuery({
+    queryKey: ['food', userStore.username],
+    queryFn: async () => {
+        const {data} = await getAlLFoodEntries()
+        foodEntries.value = data.allFoodEntries;
+        return data;
+    },
+})
+
 const openModal = (): void => {
     isModalOpened.value = true;
 }
 
 const closeModal = (val: boolean): void => {
     isModalOpened.value = val;
-}
-const z = () => {
-    axios.get('/getFood',)
 }
 
 const addFoodEntry = (entry: IFoodEntry): void => {
