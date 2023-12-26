@@ -11,6 +11,7 @@ app.use(express.json());
 app.use((req: Request, res: Response, next: NextFunction): void => {
     res.header('Access-Control-Allow-Origin', req.headers.origin);
     res.header('Access-Control-Allow-Headers', 'Content-Type, Authorization');
+    res.header('Access-Control-Allow-Methods', '*')
     res.setHeader('Access-Control-Allow-Credentials', 'true');
     next();
 })

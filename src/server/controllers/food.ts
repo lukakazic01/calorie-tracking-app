@@ -26,5 +26,15 @@ module.exports = {
         } catch(err) {
             return res.status(400).send({status: 'error'})
         }
+    },
+    deleteFoodEntry: async (req: Request, res: Response): Promise<Response> => {
+        const { id } = req.query;
+        try {
+            const foodEntry: HydratedDocument<IFood | null> = await FoodEntry.findById(id)
+            await foodEntry.deleteOne()
+            return res.status(200).send({status: 'success', foodEntry})
+        } catch(err) {
+            return res.status(409).send({status: 'success'})
+        }
     }
 }

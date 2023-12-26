@@ -15,31 +15,45 @@
         </thead>
         <tbody>
         <template v-if="props.foodEntries.length">
-        <tr class="border text-center" v-for="(entry, index) in props.foodEntries" :key="index">
+        <tr class="border text-center" v-for="entry in props.foodEntries" :key="entry._id">
             <td>{{ entry.name }}</td>
             <td>{{ entry.calories }}</td>
             <td>{{ entry.date }}</td>
             <td>{{ entry.price }}$</td>
             <td>
-                <button class="rounded mr-3 p-2 bg-red-500 text-white">delete</button>
+                <button class="rounded mr-3 p-2 bg-red-500 text-white" @click="deleteFoodEntry(entry)">delete</button>
                 <button class="bg-yellow-400 rounded p-2">edit</button>
             </td>
         </tr>
         </template>
         </tbody>
     </table>
-    <p v-if="!props.foodEntries.length" class="mt-3">There is no data for you. add some food entries :)</p>
+    <p v-if="!props.foodEntries.length && !isLoading" class="mt-3">There is no data for you, add some food entries :)</p>
 </template>
 
 <script setup lang="ts">
 import type {IFoodEntry} from "@/models/FoodEntry";
 import Loader from "@/components/Loader.vue";
+import axios from "axios";
 
-const props = defineProps<{
+let props = defineProps<{
     foodEntries: IFoodEntry[]
     isError: boolean,
     isLoading: boolean
 }>()
+
+const emit = defineEmits<{
+    deleteEntry: [val: IFoodEntry]
+}>()
+
+const deleteFoodEntry = async (foodEntry: IFoodEntry) => {
+    try {
+        const {data} = await axios.delete('deleteFoodEntry', {params: {id: foodEntry._id}})
+        emit('deleteEntry', data.foodEntry)
+    } catch(err) {
+        //
+    }
+}
 </script>
 
 <style scoped>

@@ -14,12 +14,13 @@
                   </div>
               </div>
           </div>
-          <FoodEntryTable :food-entries="foodEntries" :is-loading="isLoading" :is-error="isError"/>
+          <FoodEntryTable :food-entries="foodEntries" :is-loading="isLoading" :is-error="isError" @delete-entry="deleteEntry"/>
       </div>
       <FoodEntryModal
               :open-modal="isModalOpened"
               @close-modal="closeModal"
               @add-food-entry="addFoodEntry"
+
       />
   </main>
 </template>
@@ -58,6 +59,10 @@ const closeModal = (val: boolean): void => {
 
 const addFoodEntry = (entry: IFoodEntry): void => {
     foodEntries.value.push(entry)
+}
+
+const deleteEntry = (entry: IFoodEntry): void => {
+    foodEntries.value = foodEntries.value.filter((item) => entry._id !== item._id)
 }
 </script>
 
