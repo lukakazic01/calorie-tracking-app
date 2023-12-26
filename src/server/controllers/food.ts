@@ -12,7 +12,7 @@ module.exports = {
             const allFoodEntries: HydratedDocument<IFood | null> = await FoodEntry.find({user: user._id}).select('-user')
             return res.status(200).send({status: 'success', allFoodEntries: allFoodEntries})
         } catch(err) {
-            return res.status(400).send({status: 'error'})
+            return res.status(400).send({status: 'error', error: err})
         }
 
     },
@@ -24,7 +24,7 @@ module.exports = {
             await foodEntry.save()
             return res.status(201).send(foodEntry);
         } catch(err) {
-            return res.status(400).send({status: 'error'})
+            return res.status(400).send(err)
         }
     },
     deleteFoodEntry: async (req: Request, res: Response): Promise<Response> => {

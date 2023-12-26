@@ -38,12 +38,13 @@ axios.interceptors.response.use(
     (res) => {
         return res;
     },
-    async (err): Promise<void> => {
-        if(err.response.data.message === 'Invalid token') {
+    (error) => {
+        if(error.response.data.message === 'Invalid token') {
             userStore.$reset()
             cookies.remove('token')
-            await router.push('/login')
+            router.push('/login').then()
         }
+        return Promise.reject(error);
     }
 )
 

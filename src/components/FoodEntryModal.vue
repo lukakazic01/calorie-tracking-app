@@ -51,9 +51,14 @@ const foodEntry = ref<IFoodEntry>({name: '', date: new Date(), price: null, calo
 const userStore = useUserStore()
 const {mutate} = useMutation({
     mutationFn: (foodEntry: IFoodEntry & {email: string}) => axios.post<IFood & {status: string}>('/addFoodEntry', foodEntry),
+    onError: (err) => {
+      console.log(err)
+    },
     onSuccess: (res) => {
-        const {data} = res
-        emit('addFoodEntry', data);
+        if (res) {
+            const {data} = res
+            emit('addFoodEntry', data);
+        }
     }
 })
 
@@ -62,7 +67,6 @@ const closeModal = (): void => {
 }
 
 const addFoodEntry = (): void => {
-    emit('closeModal', false)
     mutate({...foodEntry.value, email: userStore.username})
 }
 </script>
