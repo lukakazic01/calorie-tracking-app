@@ -14,13 +14,19 @@
                   </div>
               </div>
           </div>
-          <FoodEntryTable :food-entries="foodEntries" :is-loading="isLoading" :is-error="isError" @delete-entry="deleteEntry"/>
+          <FoodEntryTable
+              :food-entries="foodEntries"
+              :is-loading="isLoading"
+              :is-error="isError"
+              @delete-entry="deleteEntry"
+              @edit-entry="updateFoodEntry"/>
       </div>
       <FoodEntryModal
-              :open-modal="isModalOpened"
+              v-if="isModalOpened"
+              :entry-for-editing="foodEntry"
               @close-modal="closeModal"
               @add-food-entry="addFoodEntry"
-
+              @edit-food-entry="editFoodEntry"
       />
   </main>
 </template>
@@ -35,6 +41,7 @@ import {useQuery} from "@tanstack/vue-query";
 import {useUserStore} from "@/stores/user";
 import type {AllFoodEntriesI} from "@/models/allFoodEntries";
 const foodEntries = ref<IFoodEntry[]>([])
+const foodEntry = ref<IFoodEntry>()
 const date = ref<string>('');
 const isModalOpened = ref<boolean>(false);
 const userStore = useUserStore()
@@ -63,6 +70,20 @@ const addFoodEntry = (entry: IFoodEntry): void => {
 
 const deleteEntry = (entry: IFoodEntry): void => {
     foodEntries.value = foodEntries.value.filter((item) => entry._id !== item._id)
+}
+
+const updateFoodEntry = (entry: IFoodEntry): void => {
+    isModalOpened.value = true;
+    foodEntry.value = entry;
+}
+
+const editFoodEntry = (entry: IFoodEntry): void => {
+    foodEntries.value = foodEntries.value.map((item) => {
+        if(item._id === entry._id) {
+            return entry
+        }
+        return item;
+    })
 }
 </script>
 

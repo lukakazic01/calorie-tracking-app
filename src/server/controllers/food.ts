@@ -36,5 +36,15 @@ module.exports = {
         } catch(err) {
             return res.status(409).send({status: 'success'})
         }
+    },
+    updateFoodEntry: async (req: Request, res: Response): Promise<Response> => {
+        const {email, name, date, price, calories, _id} = req.body;
+        try {
+            const foodEntry: HydratedDocument<IFood | null> = await FoodEntry.findOneAndUpdate({_id}, {name, date, price, calories}, {new: true})
+            await foodEntry.save()
+            return res.status(201).send({status: 'success', foodEntry})
+        } catch(err) {
+            return res.status(409).send({status: 'error'})
+        }
     }
 }

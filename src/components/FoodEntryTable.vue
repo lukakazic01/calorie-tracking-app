@@ -22,7 +22,7 @@
             <td>{{ entry.price }}$</td>
             <td>
                 <button class="rounded mr-3 p-2 bg-red-500 text-white" @click="deleteFoodEntry(entry)">delete</button>
-                <button class="bg-yellow-400 rounded p-2">edit</button>
+                <button class="bg-yellow-400 rounded p-2" @click="edit(entry)">edit</button>
             </td>
         </tr>
         </template>
@@ -44,6 +44,7 @@ let props = defineProps<{
 
 const emit = defineEmits<{
     deleteEntry: [val: IFoodEntry]
+    editEntry: [val: IFoodEntry]
 }>()
 
 const deleteFoodEntry = async (foodEntry: IFoodEntry) => {
@@ -53,6 +54,10 @@ const deleteFoodEntry = async (foodEntry: IFoodEntry) => {
     } catch(err) {
         //
     }
+}
+
+const edit = (foodEntry: IFoodEntry): void => {
+    emit('editEntry', {...foodEntry})
 }
 </script>
 
