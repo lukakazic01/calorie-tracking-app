@@ -35,17 +35,17 @@ module.exports = {
             await foodEntry.deleteOne()
             return res.status(200).send({status: 'success', foodEntry})
         } catch(err) {
-            return res.status(409).send({status: 'success'})
+            return res.status(409).send({status: 'error', error: err})
         }
     },
     updateFoodEntry: async (req: Request, res: Response): Promise<Response> => {
         const {email, name, date, price, calories, _id} = req.body;
         try {
-            const foodEntry: HydratedDocument<IFood | null> = await FoodEntry.findOneAndUpdate({_id}, {name, date: new Date(date), price, calories}, {new: true})
+            const foodEntry: HydratedDocument<IFood | null> = await FoodEntry.findOneAndUpdate({_id}, {name, date: new Date(date), price, calories}, {new: true, runValidators: true})
             await foodEntry.save()
             return res.status(201).send({status: 'success', foodEntry})
         } catch(err) {
-            return res.status(409).send({status: 'error'})
+            return res.status(409).send(err)
         }
     }
 }

@@ -27,6 +27,7 @@
               @close-modal="closeModal"
               @add-food-entry="addFoodEntry"
               @edit-food-entry="editFoodEntry"
+              @undo-editing="foodEntry = null"
       />
   </main>
 </template>
@@ -41,7 +42,7 @@ import {useQuery} from "@tanstack/vue-query";
 import {useUserStore} from "@/stores/user";
 import type {AllFoodEntriesI} from "@/models/allFoodEntries";
 const foodEntries = ref<IFoodEntry[]>([])
-const foodEntry = ref<IFoodEntry>()
+const foodEntry = ref<IFoodEntry | null>(null)
 const date = ref<string>('');
 const isModalOpened = ref<boolean>(false);
 const userStore = useUserStore()
