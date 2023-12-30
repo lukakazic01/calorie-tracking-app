@@ -16,7 +16,7 @@
             </div>
             <div class="flex flex-col mb-4">
                 <label class="mb-2">Time:</label>
-                <VueDatePicker v-model="foodEntry.date" placeholder="Time"/>
+                <VueDatePicker v-model="foodEntry.date" placeholder="Time" format="dd/mm/yyyy hh:mm"/>
                 <p class="text-red-500 invisible"
                    :class="[createEntry?.error?.response?.data?.errors?.date  ? '!visible' : '!invisible']">
                     Date is required

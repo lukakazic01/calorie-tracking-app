@@ -9,8 +9,8 @@ module.exports = {
         const {email} = req.query
         try {
             const user: HydratedDocument<UserI | null>  = await User.findOne({email})
-            const allFoodEntries: HydratedDocument<IFood | null> = await FoodEntry.find({user: user._id}).select('-user')
-            return res.status(200).send({status: 'success', allFoodEntries: allFoodEntries})
+            const allFoodEntries: IFood[] | null = await FoodEntry.find({user: user._id}).select('-user').lean()
+            return res.status(200).send({status: 'success', allFoodEntries})
         } catch(err) {
             return res.status(400).send({status: 'error', error: err})
         }
@@ -20,9 +20,10 @@ module.exports = {
         const {email, name, date, price, calories} = req.body;
         try {
             const user = await User.findOne({email})
-            const foodEntry = new FoodEntry({name, date, price, calories, user})
+            const foodEntry: HydratedDocument<IFood> = new FoodEntry({name, date: new Date(date), price, calories, user})
             await foodEntry.save()
-            return res.status(201).send(foodEntry);
+            console.log(foodEntry)
+            return res.status(201).send(foodEntry)
         } catch(err) {
             return res.status(400).send(err)
         }
@@ -40,7 +41,7 @@ module.exports = {
     updateFoodEntry: async (req: Request, res: Response): Promise<Response> => {
         const {email, name, date, price, calories, _id} = req.body;
         try {
-            const foodEntry: HydratedDocument<IFood | null> = await FoodEntry.findOneAndUpdate({_id}, {name, date, price, calories}, {new: true})
+            const foodEntry: HydratedDocument<IFood | null> = await FoodEntry.findOneAndUpdate({_id}, {name, date: new Date(date), price, calories}, {new: true})
             await foodEntry.save()
             return res.status(201).send({status: 'success', foodEntry})
         } catch(err) {

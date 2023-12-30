@@ -18,7 +18,7 @@
         <tr class="border text-center" v-for="entry in props.foodEntries" :key="entry._id">
             <td>{{ entry.name }}</td>
             <td>{{ entry.calories }}</td>
-            <td>{{ entry.date }}</td>
+            <td>{{ useDateFormatter(entry.date) }}</td>
             <td>{{ entry.price }}$</td>
             <td>
                 <button class="rounded mr-3 p-2 bg-red-500 text-white" @click="deleteFoodEntry(entry)">delete</button>
@@ -35,7 +35,7 @@
 import type {IFoodEntry} from "@/models/FoodEntry";
 import Loader from "@/components/Loader.vue";
 import axios from "axios";
-
+import {useDateFormatter} from "@/composables/dateFormatter";
 let props = defineProps<{
     foodEntries: IFoodEntry[]
     isError: boolean,
