@@ -66,7 +66,7 @@ const emit = defineEmits<{
 }>()
 const foodEntry = ref<IFoodEntry>({name: '', date: new Date(), price: null, calories: null});
 const userStore = useUserStore()
-const error = ref();
+const error = ref(); //type it when you come back
 const createEntry = useMutation({
     mutationFn: (foodEntry: IFoodEntry & {email: string}) => axios.post<IFood & {status: string}>('/addFoodEntry', foodEntry),
     onSuccess: (res) => {

@@ -10,7 +10,7 @@
               <div class="flex">
                   <div class="flex items-center">
                       <p class="mr-2">Date:</p>
-                      <VueDatePicker v-model="date" range/>
+                      <FoodFilter />
                   </div>
               </div>
           </div>
@@ -41,6 +41,7 @@ import FoodEntryTable from "@/components/FoodEntryTable.vue";
 import {useQuery} from "@tanstack/vue-query";
 import {useUserStore} from "@/stores/user";
 import type {AllFoodEntriesI} from "@/models/allFoodEntries";
+import FoodFilter from "@/components/FoodFilter.vue";
 const foodEntries = ref<IFoodEntry[]>([])
 const foodEntry = ref<IFoodEntry | null>(null)
 const date = ref<string>('');

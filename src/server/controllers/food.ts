@@ -47,5 +47,8 @@ module.exports = {
         } catch(err) {
             return res.status(409).send(err)
         }
+    },
+    filterFoodByDate: async (req: Request, res: Response): Promise<Response> => {
+        return res.status(200).send({status: 'success'});
     }
 }
