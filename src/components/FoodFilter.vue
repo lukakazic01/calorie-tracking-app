@@ -12,7 +12,6 @@ import axios from "axios";
 import {useQuery} from "@tanstack/vue-query";
 import {useUserStore} from "@/stores/user";
 import {AllFoodEntriesI} from "@/models/allFoodEntries";
-import type {IFoodEntry} from "@/models/FoodEntry";
 import type {DateFilterResponse} from "@/models/DateFilterResponse";
 
 const date = ref<[Date, Date | null]>([]);
@@ -22,17 +21,17 @@ const userStore = useUserStore()
 const emit = defineEmits<{
     filterChange: [val: DateFilterResponse]
 }>()
+
 if(route.query.date) {
     const dateQueryParam: string | LocationQueryValue[] = route.query.date;
     if(typeof dateQueryParam === 'string') {
         const [startDate, endDate]= dateQueryParam.split('-');
         const modifiedStartDate: string = startDate.replaceAll('/', '-');
-        if(!endDate) {
-            date.value = [new Date(modifiedStartDate), null]
-        } else {
-            const modifiedEndDate: string = endDate.replaceAll('/', '-');
-            date.value = [new Date(modifiedStartDate), new Date(modifiedEndDate)]
-        }
+        const modifiedEndDate: string | null = endDate?.replaceAll('/', '-') || null;
+        date.value = [
+            new Date(modifiedStartDate),
+            (modifiedEndDate ? new Date(modifiedEndDate) : null)
+        ]
     }
 }
 
@@ -54,6 +53,8 @@ const {error, isError, refetch} = useQuery({
 const handleDateChange = async (val: [Date, Date | null] | null): Promise<void> => {
     if(!val) {
         await router.push({path: '', query: {}})
+        date.value = [];
+        refetch()
         return;
     }
     const [startDate, endDate]: [Date, Date] = val

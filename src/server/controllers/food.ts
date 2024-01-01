@@ -5,12 +5,24 @@ import type {IFood} from "../interfaces/Food";
 const User = require('../models/user')
 const FoodEntry = require('../models/food');
 module.exports = {
-    getFood: async (req: Request, res: Response): Promise<Response> => {
-        const {email} = req.query
+    getFood: async (req: Request, res: Response): Promise<any> => {
+        const {email, startDate, endDate} = req.query
         try {
             const user: HydratedDocument<UserI | null>  = await User.findOne({email})
-            const allFoodEntries: IFood[] | null = await FoodEntry.find({user: user._id}).select('-user').lean()
-            return res.status(200).send({status: 'success', allFoodEntries})
+            if(endDate || startDate) {
+                    const query = {
+                        date: {
+                            ...(startDate ? { $gte: new Date(startDate as string) } : {}),
+                            ...(endDate ? { $lte: new Date(endDate as string) } : {})
+                        }
+                    }
+                    const allFoodEntries: IFood[] | null = await FoodEntry.find({user: user._id, ...query}).select('-user').lean()
+                    return res.status(200).send({status: 'success', allFoodEntries})
+
+            } else {
+                const allFoodEntries: IFood[] | null = await FoodEntry.find({user: user._id}).select('-user').lean()
+                return res.status(200).send({status: 'success', allFoodEntries})
+            }
         } catch(err) {
             return res.status(400).send({status: 'error', error: err})
         }
@@ -22,7 +34,6 @@ module.exports = {
             const user = await User.findOne({email})
             const foodEntry: HydratedDocument<IFood> = new FoodEntry({name, date: new Date(date), price, calories, user})
             await foodEntry.save()
-            console.log(foodEntry)
             return res.status(201).send(foodEntry)
         } catch(err) {
             return res.status(400).send(err)
