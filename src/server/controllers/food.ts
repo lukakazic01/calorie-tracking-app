@@ -5,7 +5,7 @@ import type {IFood} from "../interfaces/Food";
 const User = require('../models/user')
 const FoodEntry = require('../models/food');
 module.exports = {
-    getFood: async (req: Request, res: Response): Promise<any> => {
+    getFood: async (req: Request, res: Response): Promise<Response> => {
         const {email, startDate, endDate} = req.query
         try {
             const user: HydratedDocument<UserI | null>  = await User.findOne({email})
