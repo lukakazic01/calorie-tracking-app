@@ -37,6 +37,7 @@ import {ref} from "vue";
 import type {IFoodEntry} from "@/models/FoodEntry";
 import FoodEntryTable from "@/components/FoodEntryTable.vue";
 import FoodFilter from "@/components/FoodFilter.vue";
+import type {DateFilterResponse} from "@/models/DateFilterResponse";
 const foodEntries = ref<IFoodEntry[]>([])
 const foodEntry = ref<IFoodEntry | null>(null)
 const isLoading = ref(true);
@@ -72,7 +73,7 @@ const editFoodEntry = (entry: IFoodEntry): void => {
     })
 }
 
-const handleFilterChange = (data: any): void => {
+const handleFilterChange = (data: DateFilterResponse): void => {
     foodEntries.value = data.allFoodEntries
     isLoading.value = false
     isError.value = data.isError.value

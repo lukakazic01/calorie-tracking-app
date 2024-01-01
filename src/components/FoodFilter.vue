@@ -13,13 +13,14 @@ import {useQuery} from "@tanstack/vue-query";
 import {useUserStore} from "@/stores/user";
 import {AllFoodEntriesI} from "@/models/allFoodEntries";
 import type {IFoodEntry} from "@/models/FoodEntry";
+import type {DateFilterResponse} from "@/models/DateFilterResponse";
 
 const date = ref<[Date, Date | null]>([]);
 const router = useRouter();
 const route = useRoute();
 const userStore = useUserStore()
 const emit = defineEmits<{
-    filterChange: [val: {allFoodEntries: [] | IFoodEntry[], isError: boolean}]
+    filterChange: [val: DateFilterResponse]
 }>()
 if(route.query.date) {
     const dateQueryParam: string | LocationQueryValue[] = route.query.date;
