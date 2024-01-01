@@ -10,7 +10,7 @@
               <div class="flex">
                   <div class="flex items-center">
                       <p class="mr-2">Date:</p>
-                      <FoodFilter />
+                      <FoodFilter @filter-change="handleFilterChange"/>
                   </div>
               </div>
           </div>
@@ -27,37 +27,21 @@
               @close-modal="closeModal"
               @add-food-entry="addFoodEntry"
               @edit-food-entry="editFoodEntry"
-              @undo-editing="foodEntry = null"
-      />
+              @undo-editing="foodEntry = null"/>
   </main>
 </template>
 
 <script setup lang="ts">
 import FoodEntryModal from "@/components/FoodEntryModal.vue";
 import {ref} from "vue";
-import axios from "axios";
 import type {IFoodEntry} from "@/models/FoodEntry";
 import FoodEntryTable from "@/components/FoodEntryTable.vue";
-import {useQuery} from "@tanstack/vue-query";
-import {useUserStore} from "@/stores/user";
-import type {AllFoodEntriesI} from "@/models/allFoodEntries";
 import FoodFilter from "@/components/FoodFilter.vue";
 const foodEntries = ref<IFoodEntry[]>([])
 const foodEntry = ref<IFoodEntry | null>(null)
-const date = ref<string>('');
+const isLoading = ref(true);
+const isError = ref(false)
 const isModalOpened = ref<boolean>(false);
-const userStore = useUserStore()
-const getAlLFoodEntries = () => axios.get<AllFoodEntriesI[]>('/getFoodEntries', {params: {email: userStore.username}});
-
-const {isLoading ,isError} = useQuery({
-    queryKey: ['food', userStore.username],
-    queryFn: async () => {
-        const {data} = await getAlLFoodEntries()
-        foodEntries.value = data.allFoodEntries;
-        return data;
-    },
-})
-
 const openModal = (): void => {
     isModalOpened.value = true;
 }
@@ -86,6 +70,12 @@ const editFoodEntry = (entry: IFoodEntry): void => {
         }
         return item;
     })
+}
+
+const handleFilterChange = (data: any): void => {
+    foodEntries.value = data.allFoodEntries
+    isLoading.value = false
+    isError.value = data.isError.value
 }
 </script>
 

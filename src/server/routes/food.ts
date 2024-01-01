@@ -7,6 +7,5 @@ router.get('/getFoodEntries', validateJwt, foodController.getFood)
 router.post('/addFoodEntry', foodController.addFoodEntry);
 router.delete('/deleteFoodEntry', foodController.deleteFoodEntry)
 router.put('/updateFoodEntry', foodController.updateFoodEntry)
-router.get('/filterByDate', foodController.filterFoodByDate)
 
 module.exports = router
