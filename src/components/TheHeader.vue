@@ -4,6 +4,7 @@
             <li class="p-3"><RouterLink to="/">Home</RouterLink></li>
             <li class="p-3"><RouterLink to="/register">Register</RouterLink></li>
             <li class="p-3"><RouterLink to="/login">Login</RouterLink></li>
+            <li class="p-3"><RouterLink to="/intakes">Daily intakes</RouterLink></li>
         </ul>
         <p v-if="userStore.username" class="text-white pr-3">{{userStore.username}}</p>
     </nav>

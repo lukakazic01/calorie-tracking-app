@@ -58,5 +58,30 @@ module.exports = {
         } catch(err) {
             return res.status(409).send(err)
         }
+    },
+    caloriesByDay: async (req: Request, res: Response): Promise<any> => {
+        const {email} = req.query
+        try {
+            const user: HydratedDocument<UserI | null> = await User.findOne({email})
+            const foodEntries = await FoodEntry.aggregate([
+                {
+                    $match: {"user": user._id}
+                },
+                {
+                    $group: {
+                        _id: {
+                            $dayOfYear: {
+                                date: "$date",
+                            }
+                        },
+                        totalAmount: {$sum: "$calories"}
+                    },
+                },
+            ])
+
+        } catch(err) {
+            //
+        }
+        return res.status(200).send({status: 'success'})
     }
 }
