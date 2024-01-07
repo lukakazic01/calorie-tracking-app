@@ -6,14 +6,12 @@
                 <th>Total calories</th>
             </thead>
             <tbody>
-                <tr class="border border-slate-400">
-                    <td>05/01/2024</td>
-                    <td>2000 calories</td>
-                </tr>
-                <tr>
-                    <td>05/01/2024</td>
-                    <td>2000 calories</td>
-                </tr>
+                <template v-if="data">
+                    <tr class="border border-slate-400" v-for="(todayCalories, index) in data.data.caloriesByDay" :key="index">
+                        <td>{{ todayCalories.date }}</td>
+                        <td>{{ todayCalories.totalAmount }}</td>
+                    </tr>
+                </template>
             </tbody>
         </table>
     </div>
@@ -25,7 +23,7 @@ import axios from "axios";
 import {useUserStore} from "@/stores/user";
 const userStore = useUserStore()
 
-const {error, success, isError} = useQuery({
+const {error, success, data} = useQuery({
     queryFn: () => axios.get('/caloriesByDay', {params: {email: userStore.username}}),
     queryKey: ['dailyIntakes', {user: userStore.username}]
 })

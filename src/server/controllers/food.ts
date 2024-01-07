@@ -2,6 +2,7 @@ import type {Request, Response} from "express";
 import type {HydratedDocument} from "mongoose";
 import type {UserI} from "../interfaces/User";
 import type {IFood} from "../interfaces/Food";
+import type {CaloriesByDayI} from "../interfaces/CaloriesByDay";
 const User = require('../models/user')
 const FoodEntry = require('../models/food');
 module.exports = {
@@ -59,29 +60,38 @@ module.exports = {
             return res.status(409).send(err)
         }
     },
-    caloriesByDay: async (req: Request, res: Response): Promise<any> => {
+    caloriesByDay: async (req: Request, res: Response): Promise<Response> => {
         const {email} = req.query
         try {
             const user: HydratedDocument<UserI | null> = await User.findOne({email})
-            const foodEntries = await FoodEntry.aggregate([
+            const caloriesByDay: CaloriesByDayI[] = await FoodEntry.aggregate([
                 {
                     $match: {"user": user._id}
                 },
                 {
                     $group: {
-                        _id: {
-                            $dayOfYear: {
-                                date: "$date",
-                            }
-                        },
+                        _id: { $dateToString: { format: "%d/%m/%Y", date: "$date" } },
                         totalAmount: {$sum: "$calories"}
                     },
                 },
+                {
+                    $project: {
+                        _id: 0,
+                        date: "$_id",
+                        totalAmount: 1
+                    }
+                }
             ])
-
+            caloriesByDay.sort((a: CaloriesByDayI,b: CaloriesByDayI): number => {
+                const firstDate = a.date.split("/").reverse().join("")
+                const secondDate = b.date.split("/").reverse().join("")
+                if(firstDate < secondDate) return -1;
+                if(firstDate > secondDate) return 1;
+                else return 0;
+            })
+            return res.status(200).send({status: 'success', caloriesByDay})
         } catch(err) {
-            //
+            return res.status(400).send({status: 'error' ,err})
         }
-        return res.status(200).send({status: 'success'})
     }
 }
