@@ -5,6 +5,7 @@
             <li class="p-3"><RouterLink to="/register">Register</RouterLink></li>
             <li class="p-3"><RouterLink to="/login">Login</RouterLink></li>
             <li class="p-3"><RouterLink to="/intakes">Daily intakes</RouterLink></li>
+            <li class="p-3" v-if="userStore.role === 'admin'"><RouterLink to="/admin/report">Report</RouterLink></li>
         </ul>
         <p v-if="userStore.username" class="text-white pr-3">{{userStore.username}}</p>
     </nav>
