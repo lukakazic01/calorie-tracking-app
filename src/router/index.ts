@@ -1,4 +1,4 @@
-import { createRouter, createWebHistory } from 'vue-router'
+import {createRouter, createWebHistory, type NavigationFailure} from 'vue-router'
 import HomeView from '../views/HomeView.vue'
 import RegisterView from "@/views/RegisterView.vue";
 import LoginView from "@/views/LoginView.vue";
@@ -6,10 +6,16 @@ import DailiyIntakesView from "@/views/DailiyIntakesView.vue";
 import ReportView from "@/views/admin/ReportView.vue";
 import AdminView from "@/views/admin/AdminView.vue";
 import {useUserStore} from "@/stores/user";
+import NotAuthorizedView from "@/views/NotAuthorizedView.vue";
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
   routes: [
+    {
+      path: '/notAuthorized',
+      name: 'notAuthorized',
+      component: NotAuthorizedView
+    },
     {
       path: '/',
       name: 'home',
@@ -34,7 +40,14 @@ const router = createRouter({
       path: '/admin',
       name: 'admin',
       component: AdminView,
-      beforeEnter: (): boolean => useUserStore().role === 'admin',
+      beforeEnter: async (): Promise<boolean | NavigationFailure | void> => {
+        if(useUserStore().role === 'admin') {
+          return true
+        } else {
+          return await router.push('/notAuthorized')
+
+        }
+      },
       children: [
         {
           path: 'report',
