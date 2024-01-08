@@ -5,5 +5,6 @@ export interface IJwtPayload {
 }
 
 interface Data {
-    name: string
+    name: string,
+    role: string
 }

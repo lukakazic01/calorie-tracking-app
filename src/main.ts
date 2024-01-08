@@ -56,6 +56,7 @@ router.beforeEach( async (to, from): Promise<any> => {
             if(authData.token) {
                 const {data} = jwtDecode<IJwtPayload>(authData.token)
                 userStore.setUsername(data.name);
+                userStore.setRole(data.role)
             }
             return true;
         } catch(err) {

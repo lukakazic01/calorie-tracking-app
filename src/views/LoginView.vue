@@ -38,7 +38,8 @@ const {isPending, isError, reset, mutate} = useMutation({
     mutationFn: (user: UserI) => axios.post<IResponse>('/login', user, {withCredentials: true}),
     onSuccess: (d): void => {
         const {data} = d
-        userStore.setUsername(data.username);
+        userStore.setUsername(data.username)
+        userStore.setRole(data.role);
         router.push('/')
     },
     onError: (err) => {

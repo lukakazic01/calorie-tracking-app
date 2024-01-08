@@ -1,6 +1,16 @@
 <template>
     <div class="flex justify-center">
-        <table class="mt-5 w-9/12 border-collapse border border-slate-400">
+        <template v-if="isLoading">
+            <div class="flex justify-center">
+                <Loader />
+            </div>
+        </template>
+        <template v-else-if="error">
+            <div class="flex justify-center">
+                <p class="text-red-500">There was an error while fetching ur data</p>
+            </div>
+        </template>
+        <table class="mt-5 w-9/12 border-collapse border border-slate-400" v-else>
             <thead class="bg-red-500 text-white text-left">
                 <th>Date added</th>
                 <th>Total calories</th>
@@ -21,9 +31,10 @@
 import {useQuery} from "@tanstack/vue-query";
 import axios from "axios";
 import {useUserStore} from "@/stores/user";
+import Loader from "@/components/Loader.vue";
 const userStore = useUserStore()
 
-const {error, success, data} = useQuery({
+const {error, data, isLoading} = useQuery({
     queryFn: () => axios.get('/caloriesByDay', {params: {email: userStore.username}}),
     queryKey: ['dailyIntakes', {user: userStore.username}]
 })

@@ -14,7 +14,8 @@ module.exports = {
             const hashedPass: string = await bcrypt.hash(password, 10);
             const user: HydratedDocument<UserI> = new User({
                 email,
-                password: hashedPass
+                password: hashedPass,
+                role: 'ordinary'
             })
             await user.save();
             return res.status(201).send({status: 'success'});
@@ -31,7 +32,7 @@ module.exports = {
                 const match: boolean = await bcrypt.compare(password, isRegistered.password);
                 if(match) {
                     const token: string = jwt.sign({
-                        data: {name: isRegistered.email}
+                        data: {name: isRegistered.email, role: isRegistered.role}
                     }, process.env.PRIVATE_KEY, {expiresIn: '1h'})
                     res.setHeader('Set-Cookie', `token=${token}`)
                     return res.status(201).send({status: 'success', username: isRegistered.email})
