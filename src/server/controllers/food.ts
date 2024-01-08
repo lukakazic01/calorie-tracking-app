@@ -5,6 +5,7 @@ import type {IFood} from "../interfaces/Food";
 import type {CaloriesByDayI} from "../interfaces/CaloriesByDay";
 const User = require('../models/user')
 const FoodEntry = require('../models/food');
+const {getDateBeforeSevenDays, getDateBeforeTwoWeeks} = require('../utils/dates')
 module.exports = {
     getFood: async (req: Request, res: Response): Promise<Response> => {
         const {email, startDate, endDate} = req.query
@@ -93,5 +94,46 @@ module.exports = {
         } catch(err) {
             return res.status(400).send({status: 'error' ,err})
         }
+    },
+    weeklyFoodCount: async (req: Request, res: Response): Promise<Response> => {
+        const dateBeforeSevenDays = getDateBeforeSevenDays();
+        const dateBeforeTwoWeeks = getDateBeforeTwoWeeks();
+        const allDatesBeforeSevenDays: number = await FoodEntry.find({date: {$gte: dateBeforeSevenDays}}).countDocuments()
+        const allDatesBeforeTwoWeeks: number = await FoodEntry.find({date: {$gte: dateBeforeTwoWeeks, $lte: dateBeforeSevenDays}}).countDocuments()
+        return res.status(200).send({status: 'success', allDatesBeforeSevenDays, allDatesBeforeTwoWeeks})
+    },
+    averageCalories: async (req: Request, res: Response): Promise<Response> => {
+        try {
+            const averageCaloriesInLastSevenDays = await FoodEntry.aggregate(averageCaloriesInLastSevenDaysPipeline())
+            const mappedAverageCalories = averageCaloriesInLastSevenDays.map((item: any) => ({...item._id[0], avgCalories: item.avgCalories}))
+            return res.status(200).send({status: 'succes', averageCaloriesInLastSevenDays: mappedAverageCalories})
+        } catch(err) {
+            return res.status(500).send({status: 'error'})
+        }
     }
+}
+
+function averageCaloriesInLastSevenDaysPipeline() {
+    const dateBeforeSevenDays = getDateBeforeSevenDays();
+    return [
+        {
+            $match: {
+                "date": {$gte: dateBeforeSevenDays}
+            }
+        },
+        {
+            $lookup: {
+                from: 'users',
+                localField: 'user',
+                foreignField: '_id',
+                as: 'users'
+            }
+        },
+        {
+            $group: {
+                _id: '$users',
+                avgCalories: {$avg: "$calories"}
+            },
+        }
+    ]
 }
