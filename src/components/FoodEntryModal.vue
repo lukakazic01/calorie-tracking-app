@@ -16,7 +16,7 @@
             </div>
             <div class="flex flex-col mb-4">
                 <label class="mb-2">Time:</label>
-                <VueDatePicker v-model="foodEntry.date" placeholder="Time" format="dd/mm/yyyy hh:mm"/>
+                <VueDatePicker v-model="foodEntry.date" placeholder="Time" format="dd/MM/yyyy hh:mm"/>
                 <p class="text-red-500 invisible"
                    :class="[error?.response?.data?.errors?.date  ? '!visible' : '!invisible']">
                     Date is required
@@ -39,7 +39,7 @@
                 </p>
             </div>
             <div class="flex justify-end">
-                <button @click="closeModal();" class="bg-red-500 text-white rounded p-2 mr-2">Close</button>
+                <button @click="closeModal()" class="bg-red-500 text-white rounded p-2 mr-2">Close</button>
                 <button @click="submit" class="bg-green-600 rounded text-white p-2">Save</button>
             </div>
           </div>
