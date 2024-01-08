@@ -5,7 +5,12 @@
             <li class="p-3"><RouterLink to="/register">Register</RouterLink></li>
             <li class="p-3"><RouterLink to="/login">Login</RouterLink></li>
             <li class="p-3"><RouterLink to="/intakes">Daily intakes</RouterLink></li>
-            <li class="p-3" v-if="userStore.role === 'admin'"><RouterLink to="/admin/report">Report</RouterLink></li>
+            <HasPermission :role="userStore.role" v-if="userStore.role">
+                <template #adminUser>
+                    <li class="p-3"><RouterLink to="/admin/report">Report</RouterLink></li>
+                </template>
+                <template #ordinaryUser />
+            </HasPermission>
         </ul>
         <p v-if="userStore.username" class="text-white pr-3">{{userStore.username}}</p>
     </nav>
@@ -13,6 +18,7 @@
 
 <script setup>
 import {useUserStore} from "@/stores/user";
+import HasPermission from "@/components/HasPermission.vue";
 const userStore = useUserStore()
 </script>
 
