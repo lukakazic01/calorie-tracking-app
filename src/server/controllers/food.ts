@@ -96,8 +96,8 @@ module.exports = {
         }
     },
     weeklyFoodCount: async (req: Request, res: Response): Promise<Response> => {
-        const dateBeforeSevenDays = getDateBeforeSevenDays();
-        const dateBeforeTwoWeeks = getDateBeforeTwoWeeks();
+        const dateBeforeSevenDays: Date = getDateBeforeSevenDays();
+        const dateBeforeTwoWeeks: Date = getDateBeforeTwoWeeks();
         const allDatesBeforeSevenDays: number = await FoodEntry.find({date: {$gte: dateBeforeSevenDays}}).countDocuments()
         const allDatesBeforeTwoWeeks: number = await FoodEntry.find({date: {$gte: dateBeforeTwoWeeks, $lte: dateBeforeSevenDays}}).countDocuments()
         return res.status(200).send({status: 'success', allDatesBeforeSevenDays, allDatesBeforeTwoWeeks})
@@ -105,7 +105,7 @@ module.exports = {
     averageCalories: async (req: Request, res: Response): Promise<Response> => {
         try {
             const averageCaloriesInLastSevenDays = await FoodEntry.aggregate(averageCaloriesInLastSevenDaysPipeline())
-            const mappedAverageCalories = averageCaloriesInLastSevenDays.map((item: any) => ({...item._id[0], avgCalories: item.avgCalories}))
+            const mappedAverageCalories = averageCaloriesInLastSevenDays.map((item: any) => ({email: item._id[0].email, id: item._id[0]._id, avgCalories: item.avgCalories}))
             return res.status(200).send({status: 'succes', averageCaloriesInLastSevenDays: mappedAverageCalories})
         } catch(err) {
             return res.status(500).send({status: 'error'})
