@@ -5,5 +5,5 @@ export interface CaloriesByDayI {
 
 interface CaloriesAndDateEntryI {
     date: string,
-    amount: number
+    totalAmount: number,
 }
