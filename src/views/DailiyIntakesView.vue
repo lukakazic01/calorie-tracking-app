@@ -17,7 +17,7 @@
             </thead>
             <tbody>
                 <template v-if="data">
-                    <tr class="border border-slate-400" v-for="(todayCalories, index) in data.data.caloriesByDay" :key="index">
+                    <tr class="border border-slate-400" v-for="(todayCalories, index) in data.caloriesByDay" :key="index">
                         <td>{{ todayCalories.date }}</td>
                         <td>{{ todayCalories.totalAmount }}</td>
                     </tr>
@@ -27,16 +27,18 @@
     </div>
 </template>
 
-<script setup>
+<script lang="ts" setup>
 import {useQuery} from "@tanstack/vue-query";
 import axios from "axios";
 import {useUserStore} from "@/stores/user";
 import Loader from "@/components/Loader.vue";
+import type {CaloriesByDayI} from "@/models/CaloriesByDay";
 const userStore = useUserStore()
 
 const {error, data, isLoading} = useQuery({
-    queryFn: () => axios.get('/caloriesByDay', {params: {email: userStore.username}}),
-    queryKey: ['dailyIntakes', {user: userStore.username}]
+    queryFn: () => axios.get<CaloriesByDayI>('/caloriesByDay', {params: {email: userStore.username}}),
+    queryKey: ['dailyIntakes', {user: userStore.username}],
+    select: (data) => data.data
 })
 </script>
 
